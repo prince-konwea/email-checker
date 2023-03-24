@@ -38,10 +38,24 @@ func checkDomain(domain string) {
    }
 
    for _, record := range txtRecord {
-	if string.HasPrefix(record, "v=spf1"){
+	if strings.HasPrefix(record, "v=spf1"){
 		hasSPF =true
 		spfRecord = record
 		break
 	}
    }
+
+   dmarcRecords, err := net.LookupTXT("_dmarc." + domain)
+   if err != nil {
+	log.Printf("Error: %v\n", err)
+   }
+
+   for _, record := range dmarcRecords {
+     if strings.HasPrefix(record , "v=DMARC1"){
+		hasDMARC = true
+		dmarcRecord = record
+		break
+	 }
+   }
+   fmt.Printf("%v", domain, hasMX, hasSPF, spfRecord, hasDMARC, dmarcRecord\n)
 } 
